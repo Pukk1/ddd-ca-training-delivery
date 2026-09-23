@@ -6,18 +6,16 @@ import libs.errs.GeneralErrors;
 import libs.errs.Result;
 import libs.errs.UnitResult;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import microarch.delivery.core.domain.model.kernel.Location;
-import microarch.delivery.core.domain.model.order.Volume;
+import microarch.delivery.core.domain.model.kernel.volume.Volume;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Assignment extends BaseEntity<UUID> {
     private UUID orderId;
     private Volume volume;
@@ -26,15 +24,25 @@ public class Assignment extends BaseEntity<UUID> {
 
     private final int MAX_COMPLETABLE_DISTANCE = 1;
 
-    public static Result<Assignment, Error> create(UUID orderId, Volume volume, Location location) {
-
-        if (Objects.isNull(orderId)) return Result.failure(GeneralErrors.valueIsRequired("order id"));
-        if (Objects.isNull(volume)) return Result.failure(GeneralErrors.valueIsRequired("volume"));
-        if (Objects.isNull(location)) return Result.failure(GeneralErrors.valueIsRequired("location"));
-
-        return Result.success(new Assignment(orderId, volume, location, Status.ASSIGNED));
+    private Assignment(UUID uuid, UUID orderId, Volume volume, Location location, Status status) {
+        super(uuid);
+        this.orderId = orderId;
+        this.volume = volume;
+        this.location = location;
+        this.status = status;
     }
 
+    public static Result<Assignment, Error> create(UUID orderId, Volume volume, Location location) {
+
+        if (Objects.isNull(orderId))
+            return Result.failure(GeneralErrors.valueIsRequired("order id"));
+        if (Objects.isNull(volume))
+            return Result.failure(GeneralErrors.valueIsRequired("volume"));
+        if (Objects.isNull(location))
+            return Result.failure(GeneralErrors.valueIsRequired("location"));
+
+        return Result.success(new Assignment(UUID.randomUUID(), orderId, volume, location, Status.ASSIGNED));
+    }
 
     public UnitResult<Error> complete(Location courierLocation) {
         var distance = location.distanceTo(courierLocation);

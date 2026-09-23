@@ -21,13 +21,8 @@ class LocationTest {
     }
 
     static List<Arguments> validCoordinates() {
-        return List.of(
-                Arguments.of(1, 1),
-                Arguments.of(10, 10),
-                Arguments.of(5, 5),
-                Arguments.of(1, 10),
-                Arguments.of(10, 1)
-        );
+        return List.of(Arguments.of(1, 1), Arguments.of(10, 10), Arguments.of(5, 5), Arguments.of(1, 10),
+                Arguments.of(10, 1));
     }
 
     @ParameterizedTest
@@ -39,16 +34,8 @@ class LocationTest {
     }
 
     static List<Arguments> invalidCoordinates() {
-        return List.of(
-                Arguments.of(0, 5),
-                Arguments.of(11, 5),
-                Arguments.of(5, 0),
-                Arguments.of(5, 11),
-                Arguments.of(0, 0),
-                Arguments.of(11, 11),
-                Arguments.of(-1, 5),
-                Arguments.of(5, -1)
-        );
+        return List.of(Arguments.of(0, 5), Arguments.of(11, 5), Arguments.of(5, 0), Arguments.of(5, 11),
+                Arguments.of(0, 0), Arguments.of(11, 11), Arguments.of(-1, 5), Arguments.of(5, -1));
     }
 
     @ParameterizedTest
@@ -62,13 +49,8 @@ class LocationTest {
     }
 
     static List<Arguments> equalLocations() {
-        return List.of(
-                Arguments.of(1, 1),
-                Arguments.of(5, 5),
-                Arguments.of(10, 10),
-                Arguments.of(1, 10),
-                Arguments.of(10, 1)
-        );
+        return List.of(Arguments.of(1, 1), Arguments.of(5, 5), Arguments.of(10, 10), Arguments.of(1, 10),
+                Arguments.of(10, 1));
     }
 
     @ParameterizedTest
@@ -81,12 +63,8 @@ class LocationTest {
     }
 
     static List<Arguments> notEqualLocations() {
-        return List.of(
-                Arguments.of(1, 1, 2, 2),
-                Arguments.of(1, 1, 1, 2),
-                Arguments.of(1, 1, 2, 1),
-                Arguments.of(5, 5, 10, 10)
-        );
+        return List.of(Arguments.of(1, 1, 2, 2), Arguments.of(1, 1, 1, 2), Arguments.of(1, 1, 2, 1),
+                Arguments.of(5, 5, 10, 10));
     }
 
     @ParameterizedTest
@@ -99,14 +77,8 @@ class LocationTest {
     }
 
     static List<Arguments> distanceCases() {
-        return List.of(
-                Arguments.of(1, 1, 1, 1, 0),
-                Arguments.of(1, 1, 3, 4, 5),
-                Arguments.of(3, 4, 1, 1, 5),
-                Arguments.of(1, 1, 10, 10, 18),
-                Arguments.of(5, 5, 5, 5, 0),
-                Arguments.of(1, 5, 10, 5, 9),
-                Arguments.of(5, 1, 5, 10, 9)
-        );
+        return List.of(Arguments.of(1, 1, 1, 1, 0), Arguments.of(1, 1, 3, 4, 5), Arguments.of(3, 4, 1, 1, 5),
+                Arguments.of(1, 1, 10, 10, 18), Arguments.of(5, 5, 5, 5, 0), Arguments.of(1, 5, 10, 5, 9),
+                Arguments.of(5, 1, 5, 10, 9));
     }
 }

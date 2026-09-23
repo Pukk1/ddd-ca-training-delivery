@@ -1,8 +1,8 @@
 package microarch.delivery.core.domain.model.order.assignment;
 
 import microarch.delivery.core.domain.model.kernel.Location;
-import microarch.delivery.core.domain.model.order.Volume;
-import microarch.delivery.core.domain.model.order.VolumeMeasure;
+import microarch.delivery.core.domain.model.kernel.volume.Measure;
+import microarch.delivery.core.domain.model.kernel.volume.Volume;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,7 +18,7 @@ class AssignmentTest {
     @Test
     void equals_whenSameParameters_shouldNotBeEqual() {
         var orderId = UUID.randomUUID();
-        var volume = Volume.create(1, VolumeMeasure.LITER).getValue();
+        var volume = Volume.create(1, Measure.LITER).getValue();
         var location = Location.create(5, 5).getValue();
 
         var assignment1 = Assignment.create(orderId, volume, location).getValue();
@@ -30,7 +30,7 @@ class AssignmentTest {
     @Test
     void create_whenValidParameters_shouldSucceed() {
         var orderId = UUID.randomUUID();
-        var volume = Volume.create(1, VolumeMeasure.LITER).getValue();
+        var volume = Volume.create(1, Measure.LITER).getValue();
         var location = Location.create(5, 5).getValue();
 
         var result = Assignment.create(orderId, volume, location);
@@ -52,7 +52,7 @@ class AssignmentTest {
 
     static List<Arguments> nullParameters() {
         var orderId = UUID.randomUUID();
-        var volume = Volume.create(1, VolumeMeasure.LITER).getValue();
+        var volume = Volume.create(1, Measure.LITER).getValue();
         var location = Location.create(5, 5).getValue();
 
         return List.of(Arguments.of(null, volume, location), Arguments.of(orderId, null, location),
@@ -62,8 +62,9 @@ class AssignmentTest {
     @ParameterizedTest
     @MethodSource("completableLocations")
     void complete_whenCourierCloseEnough_shouldSucceed(int courierX, int courierY) {
-        var assignment = Assignment.create(UUID.randomUUID(), Volume.create(1, VolumeMeasure.LITER).getValue(),
-                Location.create(5, 5).getValue()).getValue();
+        var assignment = Assignment
+                .create(UUID.randomUUID(), Volume.create(1, Measure.LITER).getValue(), Location.create(5, 5).getValue())
+                .getValue();
 
         var courierLocation = Location.create(courierX, courierY).getValue();
         var result = assignment.complete(courierLocation);
@@ -80,8 +81,9 @@ class AssignmentTest {
     @ParameterizedTest
     @MethodSource("tooFarLocations")
     void complete_whenCourierTooFar_shouldFail(int courierX, int courierY) {
-        var assignment = Assignment.create(UUID.randomUUID(), Volume.create(1, VolumeMeasure.LITER).getValue(),
-                Location.create(5, 5).getValue()).getValue();
+        var assignment = Assignment
+                .create(UUID.randomUUID(), Volume.create(1, Measure.LITER).getValue(), Location.create(5, 5).getValue())
+                .getValue();
 
         var courierLocation = Location.create(courierX, courierY).getValue();
         var result = assignment.complete(courierLocation);

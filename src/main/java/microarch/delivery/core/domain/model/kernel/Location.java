@@ -26,14 +26,10 @@ public class Location extends ValueObject<Location> {
     private static final int MAX_Y = 10;
 
     public static Result<Location, Error> create(int x, int y) {
-        var minMaxError = Stream.of(
-                        Guard.againstLessThan(x, MIN_X, "x"),
-                        Guard.againstGreaterThan(x, MAX_X, "x"),
-                        Guard.againstLessThan(y, MIN_Y, "y"),
-                        Guard.againstGreaterThan(y, MAX_Y, "y")
-                )
-                .filter(Objects::nonNull)
-                .findFirst();
+        var minMaxError = Stream
+                .of(Guard.againstLessThan(x, MIN_X, "x"), Guard.againstGreaterThan(x, MAX_X, "x"),
+                        Guard.againstLessThan(y, MIN_Y, "y"), Guard.againstGreaterThan(y, MAX_Y, "y"))
+                .filter(Objects::nonNull).findFirst();
         if (minMaxError.isPresent()) {
             return Result.failure(minMaxError.get());
         }

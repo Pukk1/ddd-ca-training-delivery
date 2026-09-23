@@ -1,4 +1,4 @@
-package microarch.delivery.core.domain.model.order;
+package microarch.delivery.core.domain.model.kernel.volume;
 
 import libs.ddd.ValueObject;
 import libs.errs.Error;
@@ -17,21 +17,21 @@ import java.util.Objects;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Volume extends ValueObject<Volume> {
     private int volume;
-    private VolumeMeasure volumeMeasure;
+    private Measure measure;
 
     private static final int MIN_VOLUME = 1;
 
-    public static Result<Volume, Error> create(int volume, VolumeMeasure volumeMeasure) {
+    public static Result<Volume, Error> create(int volume, Measure measure) {
         var minVolumeError = Guard.againstLessThan(volume, MIN_VOLUME, "volume");
         if (Objects.nonNull(minVolumeError)) {
             return Result.failure(minVolumeError);
         }
 
-        return Result.success(new Volume(volume, volumeMeasure));
+        return Result.success(new Volume(volume, measure));
     }
 
     @Override
     protected Iterable<Object> equalityComponents() {
-        return List.of(volume, volumeMeasure);
+        return List.of(volume, measure);
     }
 }
