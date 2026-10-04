@@ -1,7 +1,6 @@
 package microarch.delivery.core.domain.model.courier;
 
 import microarch.delivery.core.domain.model.kernel.Location;
-import microarch.delivery.core.domain.model.kernel.volume.Measure;
 import microarch.delivery.core.domain.model.kernel.volume.Volume;
 import microarch.delivery.core.domain.model.order.Order;
 import org.junit.jupiter.api.Test;
@@ -206,12 +205,12 @@ class CourierTest {
     }
 
     private Order createOrder(int volume) {
-        return Order.create(UUID.randomUUID(), Location.create(5, 5).getValue(),
-                Volume.create(volume, Measure.LITER).getValue()).getValue();
+        return Order.create(UUID.randomUUID(), Location.create(5, 5).getValue(), Volume.create(volume).getValue())
+                .getValue();
     }
 
     private Order createOrderAt(int x, int y, int volume) {
-        return Order.create(UUID.randomUUID(), Location.create(x, y).getValue(),
-                Volume.create(volume, Measure.LITER).getValue()).getValue();
+        return Order.create(UUID.randomUUID(), Location.create(x, y).getValue(), Volume.create(volume).getValue())
+                .getValue();
     }
 }

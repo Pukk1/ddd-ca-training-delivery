@@ -7,31 +7,40 @@ import libs.errs.Result;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Volume extends ValueObject<Volume> {
-    private int volume;
-    private Measure measure;
+    private final int volume;
 
-    private static final int MIN_VOLUME = 1;
+    private static final int MIN_VOLUME = 0;
 
-    public static Result<Volume, Error> create(int volume, Measure measure) {
+    public static Result<Volume, Error> create(int volume) {
         var minVolumeError = Guard.againstLessThan(volume, MIN_VOLUME, "volume");
         if (Objects.nonNull(minVolumeError)) {
             return Result.failure(minVolumeError);
         }
 
-        return Result.success(new Volume(volume, measure));
+        return Result.success(new Volume(volume));
+    }
+
+    public static Volume emptyVolume() {
+        return new Volume(0);
+    }
+
+    public Volume add(Volume otherVolume) {
+        return new Volume(this.volume + otherVolume.getVolume());
+    }
+
+    public boolean isGreaterThen(Volume otherVolume) {
+        return this.volume > otherVolume.getVolume();
     }
 
     @Override
     protected Iterable<Object> equalityComponents() {
-        return List.of(volume, measure);
+        return List.of(volume);
     }
 }

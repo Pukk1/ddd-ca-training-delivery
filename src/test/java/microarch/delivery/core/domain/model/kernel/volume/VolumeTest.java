@@ -12,58 +12,53 @@ class VolumeTest {
 
     @ParameterizedTest
     @MethodSource("validVolumes")
-    void create_whenValidVolume_shouldSucceed(int volume, Measure measure) {
-        var result = Volume.create(volume, measure);
+    void create_whenValidVolume_shouldSucceed(int volume) {
+        var result = Volume.create(volume);
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.getValue().getVolume()).isEqualTo(volume);
-        assertThat(result.getValue().getMeasure()).isEqualTo(measure);
     }
 
     static List<Arguments> validVolumes() {
-        return List.of(Arguments.of(1, Measure.LITER), Arguments.of(5, Measure.LITER),
-                Arguments.of(100, Measure.LITER));
+        return List.of(Arguments.of(1), Arguments.of(5), Arguments.of(100));
     }
 
     @ParameterizedTest
     @MethodSource("invalidVolumes")
-    void create_whenInvalidVolume_shouldFail(int volume, Measure measure) {
-        var result = Volume.create(volume, measure);
+    void create_whenInvalidVolume_shouldFail(int volume) {
+        var result = Volume.create(volume);
 
         assertThat(result.isFailure()).isTrue();
     }
 
     static List<Arguments> invalidVolumes() {
-        return List.of(Arguments.of(0, Measure.LITER), Arguments.of(-1, Measure.LITER),
-                Arguments.of(-100, Measure.LITER));
+        return List.of(Arguments.of(-1), Arguments.of(-100));
     }
 
     @ParameterizedTest
     @MethodSource("equalVolumes")
-    void equals_whenSameComponents_shouldBeEqual(int volume, Measure measure) {
-        var vol1 = Volume.create(volume, measure).getValue();
-        var vol2 = Volume.create(volume, measure).getValue();
+    void equals_whenSameComponents_shouldBeEqual(int volume) {
+        var vol1 = Volume.create(volume).getValue();
+        var vol2 = Volume.create(volume).getValue();
 
         assertThat(vol1).isEqualTo(vol2);
         assertThat(vol1.hashCode()).isEqualTo(vol2.hashCode());
     }
 
     static List<Arguments> equalVolumes() {
-        return List.of(Arguments.of(1, Measure.LITER), Arguments.of(5, Measure.LITER),
-                Arguments.of(100, Measure.LITER));
+        return List.of(Arguments.of(1), Arguments.of(5), Arguments.of(100));
     }
 
     @ParameterizedTest
     @MethodSource("notEqualVolumes")
-    void equals_whenDifferentComponents_shouldNotBeEqual(int volume1, Measure measure1, int volume2, Measure measure2) {
-        var vol1 = Volume.create(volume1, measure1).getValue();
-        var vol2 = Volume.create(volume2, measure2).getValue();
+    void equals_whenDifferentComponents_shouldNotBeEqual(int volume1, int volume2) {
+        var vol1 = Volume.create(volume1).getValue();
+        var vol2 = Volume.create(volume2).getValue();
 
         assertThat(vol1).isNotEqualTo(vol2);
     }
 
     static List<Arguments> notEqualVolumes() {
-        return List.of(Arguments.of(1, Measure.LITER, 5, Measure.LITER),
-                Arguments.of(5, Measure.LITER, 100, Measure.LITER), Arguments.of(1, Measure.LITER, 100, Measure.LITER));
+        return List.of(Arguments.of(1, 5), Arguments.of(5, 100), Arguments.of(1, 100));
     }
 }

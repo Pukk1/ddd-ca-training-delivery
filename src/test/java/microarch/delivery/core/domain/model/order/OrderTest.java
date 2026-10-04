@@ -1,7 +1,6 @@
 package microarch.delivery.core.domain.model.order;
 
 import microarch.delivery.core.domain.model.kernel.Location;
-import microarch.delivery.core.domain.model.kernel.volume.Measure;
 import microarch.delivery.core.domain.model.kernel.volume.Volume;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +18,7 @@ class OrderTest {
     void create_whenValidParameters_shouldSucceed() {
         var orderId = UUID.randomUUID();
         var location = Location.create(5, 5).getValue();
-        var volume = Volume.create(3, Measure.LITER).getValue();
+        var volume = Volume.create(3).getValue();
 
         var result = Order.create(orderId, location, volume);
 
@@ -41,7 +40,7 @@ class OrderTest {
     static List<Arguments> nullParameters() {
         var orderId = UUID.randomUUID();
         var location = Location.create(5, 5).getValue();
-        var volume = Volume.create(3, Measure.LITER).getValue();
+        var volume = Volume.create(3).getValue();
 
         return List.of(Arguments.of(null, location, volume), Arguments.of(orderId, null, volume),
                 Arguments.of(orderId, location, null));
@@ -114,8 +113,7 @@ class OrderTest {
     }
 
     private Order createOrder() {
-        return Order
-                .create(UUID.randomUUID(), Location.create(5, 5).getValue(), Volume.create(3, Measure.LITER).getValue())
+        return Order.create(UUID.randomUUID(), Location.create(5, 5).getValue(), Volume.create(3).getValue())
                 .getValue();
     }
 }

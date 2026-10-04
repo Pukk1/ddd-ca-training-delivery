@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import microarch.delivery.core.domain.model.kernel.Location;
-import microarch.delivery.core.domain.model.kernel.volume.Measure;
 import microarch.delivery.core.domain.model.kernel.volume.Volume;
 import microarch.delivery.core.domain.model.order.Order;
 import microarch.delivery.core.domain.model.order.assignment.Assignment;
@@ -28,7 +27,7 @@ public class Courier extends Aggregate<UUID> {
     private List<Assignment> assignments;
 
     private static final int MAX_MOVE_DISTANCE = 1;
-    private static final int MAX_VOLUME = 20;
+    private static final Volume MAX_VOLUME = Volume.create(20).getValue();
 
     private Courier(UUID courierId, String name, Location location, Volume maxVolume) {
         super(courierId);
@@ -44,20 +43,16 @@ public class Courier extends Aggregate<UUID> {
         if (Objects.isNull(location))
             return Result.failure(GeneralErrors.valueIsRequired("location"));
 
-        var maxVolumeOrError = Volume.create(MAX_VOLUME, Measure.LITER);
-        if (maxVolumeOrError.isFailure()) {
-            return Result.failure(maxVolumeOrError.getError());
-        }
-
-        return Result.success(new Courier(UUID.randomUUID(), name, location, maxVolumeOrError.getValue()));
+        return Result.success(new Courier(UUID.randomUUID(), name, location, MAX_VOLUME));
     }
 
     public Result<Boolean, Error> mayAssignNewOrder(Order order) {
         if (Objects.isNull(order))
             return Result.failure(GeneralErrors.valueIsRequired("order"));
 
-        var currentVolume = this.assignments.stream().map(it -> it.getVolume().getVolume()).reduce(0, Integer::sum);
-        if (currentVolume + order.getVolume().getVolume() > this.maxVolume.getVolume()) {
+        var currentVolume = this.assignments.stream().map(Assignment::getVolume).reduce(Volume.emptyVolume(),
+                Volume::add);
+        if (currentVolume.add(order.getVolume()).isGreaterThen(this.maxVolume)) {
             return Result.success(false);
         } else {
             return Result.success(true);
