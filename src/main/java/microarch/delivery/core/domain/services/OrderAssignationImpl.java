@@ -39,7 +39,8 @@ public class OrderAssignationImpl implements OrderAssignation {
             }
         }
         if (minimalDistanceCourier == null) {
-            return Result.failure(Error.of(OrderAssignationImpl.class.getSimpleName().toLowerCase(), "courier not found"));
+            return Result
+                    .failure(Error.of(OrderAssignationImpl.class.getSimpleName().toLowerCase(), "courier not found"));
         } else {
             return Result.success(minimalDistanceCourier.b);
         }
