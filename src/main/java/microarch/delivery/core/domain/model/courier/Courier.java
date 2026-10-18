@@ -103,9 +103,10 @@ public class Courier extends Aggregate<UUID> {
         var completeResult = orderAssignment.complete(this.location);
         if (completeResult.isFailure()) {
             return UnitResult.failure(completeResult.getError());
-        } else {
-            return UnitResult.success();
         }
+        // Агрегат не хранит историю: завершённое назначение удаляется и освобождает вместимость курьера
+        this.assignments.remove(orderAssignment);
+        return UnitResult.success();
     }
 
     public UnitResult<Error> moveTo(Location location) {
