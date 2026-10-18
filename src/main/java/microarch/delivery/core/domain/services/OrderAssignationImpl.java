@@ -34,7 +34,7 @@ public class OrderAssignationImpl implements OrderAssignation {
         Pair<Integer, Courier> minimalDistanceCourier = null;
         for (Courier mayAssignCourier : mayAssignCouriers) {
             var currentDistanceTo = mayAssignCourier.getLocation().distanceTo(order.getLocation());
-            if (minimalDistanceCourier == null || minimalDistanceCourier.a < currentDistanceTo) {
+            if (minimalDistanceCourier == null || minimalDistanceCourier.a > currentDistanceTo) {
                 minimalDistanceCourier = new Pair<>(currentDistanceTo, mayAssignCourier);
             }
         }
