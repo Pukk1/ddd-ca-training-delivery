@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 @Getter
@@ -37,6 +38,11 @@ public class Location extends ValueObject<Location> {
         }
 
         return Result.success(new Location(x, y));
+    }
+
+    public static Location createRandom() {
+        var random = ThreadLocalRandom.current();
+        return new Location(random.nextInt(MIN_X, MAX_X + 1), random.nextInt(MIN_Y, MAX_Y + 1));
     }
 
     public int distanceTo(Location other) {

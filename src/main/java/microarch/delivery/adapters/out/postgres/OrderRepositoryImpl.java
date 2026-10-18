@@ -41,4 +41,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     public List<Order> getAllAssigned() {
         return jpa.findAllByStatus(Status.ASSIGNED);
     }
+
+    @Override
+    public List<Order> getAllNotCompleted() {
+        return jpa.findAllByStatusIn(List.of(Status.CREATED, Status.ASSIGNED));
+    }
 }
