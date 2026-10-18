@@ -5,6 +5,7 @@ import libs.errs.Error;
 import libs.errs.GeneralErrors;
 import libs.errs.Result;
 import libs.errs.UnitResult;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,21 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Getter
+@Entity
+@Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Order extends Aggregate<UUID> {
+    @Embedded
+    @AttributeOverrides({ @AttributeOverride(name = "x", column = @Column(name = "location_x", nullable = false)),
+            @AttributeOverride(name = "y", column = @Column(name = "location_y", nullable = false)) })
     private Location location;
+
+    @Embedded
+    @AttributeOverride(name = "volume", column = @Column(name = "volume", nullable = false))
     private Volume volume;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private Status status;
 
     private Order(UUID orderId, Location location, Volume volume, Status status) {

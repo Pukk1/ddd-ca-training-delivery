@@ -5,6 +5,7 @@ import libs.errs.Error;
 import libs.errs.GeneralErrors;
 import libs.errs.Result;
 import libs.errs.UnitResult;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +16,27 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Getter
+@Entity
+@Table(name = "assignments")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Assignment extends BaseEntity<UUID> {
+    @Column(name = "order_id", nullable = false)
     private UUID orderId;
+
+    @Embedded
+    @AttributeOverride(name = "volume", column = @Column(name = "volume", nullable = false))
     private Volume volume;
+
+    @Embedded
+    @AttributeOverrides({ @AttributeOverride(name = "x", column = @Column(name = "location_x", nullable = false)),
+            @AttributeOverride(name = "y", column = @Column(name = "location_y", nullable = false)) })
     private Location location;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private Status status;
 
-    private final int MAX_COMPLETABLE_DISTANCE = 1;
+    private static final int MAX_COMPLETABLE_DISTANCE = 1;
 
     private Assignment(UUID uuid, UUID orderId, Volume volume, Location location, Status status) {
         super(uuid);

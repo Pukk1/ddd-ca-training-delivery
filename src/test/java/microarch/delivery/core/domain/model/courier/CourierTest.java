@@ -132,6 +132,33 @@ class CourierTest {
         var result = courier.completeOrder(order);
 
         assertThat(result.isSuccess()).isTrue();
+        assertThat(courier.getAssignments()).isEmpty();
+    }
+
+    @Test
+    void completeOrder_whenOrderNotAtCourierLocation_shouldFailAndKeepAssignment() {
+        var courier = createCourierAt(5, 5);
+        var order = createOrderAt(1, 1, 3);
+        courier.assignNewOrder(order);
+
+        var result = courier.completeOrder(order);
+
+        assertThat(result.isFailure()).isTrue();
+        assertThat(courier.getAssignments()).hasSize(1);
+    }
+
+    @Test
+    void mayAssignNewOrder_whenPreviousOrderCompleted_shouldReturnTrue() {
+        var courier = createCourierAt(5, 5);
+        var completedOrder = createOrderAt(5, 5, 15);
+        courier.assignNewOrder(completedOrder);
+        courier.completeOrder(completedOrder);
+        var newOrder = createOrder(10);
+
+        var result = courier.mayAssignNewOrder(newOrder);
+
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(result.getValue()).isTrue();
     }
 
     @Test
