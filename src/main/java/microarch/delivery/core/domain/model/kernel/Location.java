@@ -4,6 +4,7 @@ import libs.ddd.ValueObject;
 import libs.errs.Error;
 import libs.errs.Guard;
 import libs.errs.Result;
+import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +12,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 @Getter
+@Embeddable
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Location extends ValueObject<Location> {
@@ -35,6 +38,11 @@ public class Location extends ValueObject<Location> {
         }
 
         return Result.success(new Location(x, y));
+    }
+
+    public static Location createRandom() {
+        var random = ThreadLocalRandom.current();
+        return new Location(random.nextInt(MIN_X, MAX_X + 1), random.nextInt(MIN_Y, MAX_Y + 1));
     }
 
     public int distanceTo(Location other) {
