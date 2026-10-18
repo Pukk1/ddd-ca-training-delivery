@@ -5,6 +5,7 @@ import libs.errs.Error;
 import libs.errs.GeneralErrors;
 import libs.errs.Result;
 import libs.errs.UnitResult;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,11 +20,24 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Getter
+@Entity
+@Table(name = "couriers")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Courier extends Aggregate<UUID> {
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Embedded
+    @AttributeOverrides({ @AttributeOverride(name = "x", column = @Column(name = "location_x", nullable = false)),
+            @AttributeOverride(name = "y", column = @Column(name = "location_y", nullable = false)) })
     private Location location;
+
+    @Embedded
+    @AttributeOverride(name = "volume", column = @Column(name = "max_volume", nullable = false))
     private Volume maxVolume;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "courier_id", nullable = false)
     private List<Assignment> assignments;
 
     private static final int MAX_MOVE_DISTANCE = 1;
