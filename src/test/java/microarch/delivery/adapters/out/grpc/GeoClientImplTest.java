@@ -44,6 +44,15 @@ class GeoClientImplTest {
     }
 
     @Test
+    void getLocation_whenCalled_shouldSetDeadlineOnStub() {
+        when(geoStub.getGeolocation(any())).thenReturn(reply(1, 1));
+
+        geoClient.getLocation("Тестировочная");
+
+        verify(geoStub).withDeadlineAfter(5, TimeUnit.SECONDS);
+    }
+
+    @Test
     void getLocation_whenGeoReturnsLocationOutOfRange_shouldFail() {
         when(geoStub.getGeolocation(any())).thenReturn(reply(0, 11));
 
